@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const administrativeContact = sequelize.define('administrativeContact', {
+  const AdministrativeContact = sequelize.define('AdministrativeContact', {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     }
   }, {});
-  administrativeContact.associate = function(models) {
-    administrativeContact.belongsTo(models.SupplierInfo, {
+  AdministrativeContact.associate = function(models) {
+    AdministrativeContact.belongsTo(models.SupplierInfo, {
       foreignKey: 'supplierInfoId',
       onDelete: 'CASCADE',
     });
   };
-  return administrativeContact;
+  return AdministrativeContact;
 };

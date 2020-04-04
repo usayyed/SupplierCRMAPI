@@ -46,26 +46,27 @@ module.exports = (sequelize, DataTypes) => {
       as: 'managementTeams',
     })
 
-    SupplierInfo.hasMany(models.SupplierContact, {
-      foreignKey: 'supplierInfoId',
-      as: 'supplierContacts',
-    })
+    // SupplierInfo.hasOne(models.SupplierContact, {
+    //   foreignKey: 'supplierInfoId',
+    //   as: 'supplierContacts',
+    // })
 
-    SupplierInfo.hasOne(models.adminsitrativeContact, {
-      foreignKey: 'supplierInfoId',
-      as: 'supplierContacts',
-    })
-    SupplierInfo.hasOne(models.SalesContact, {
-      foreignKey: 'supplierInfoId',
-      as: 'supplierContacts',
-    })
+    // SupplierInfo.hasOne(models.AdminsitrativeContact, {
+    //   foreignKey: 'supplierInfoId',
+    //   as: 'supplierContacts',
+    // })
+
+    // SupplierInfo.hasOne(models.SalesContact, {
+    //   foreignKey: 'supplierInfoId',
+    //   as: 'supplierContacts',
+    // })
 
     SupplierInfo.hasMany(models.CdwContact, {
       foreignKey: 'supplierInfoId',
       as: 'supplierContacts',
     })
 
-    SupplierInfo.hasMany(models.products, {
+    SupplierInfo.hasMany(models.Products, {
       foreignKey: 'supplierInfoId',
       as: 'products',
     })
