@@ -10,6 +10,8 @@ const Clients = require("../models").Clients;
 const Certifications = require("../models").Certifications;
 const Partners = require("../models").Partners;
 const ManagementTeams = require("../models").ManagementTeams;
+const SalesContact = require("../models").SalesContact;
+const SupplierContact = require("../models").SupplierContact;
 
 module.exports = {
   create(req, res) {
@@ -23,6 +25,14 @@ module.exports = {
         {
           model: AdministrativeContact,
           as: "administrativeContact"
+        },
+        {
+          model: SalesContact,
+          as: "salesContact"
+        },
+        {
+          model: SupplierContact,
+          as: "supplierContact"
         },
         {
           model: SicCodes,
