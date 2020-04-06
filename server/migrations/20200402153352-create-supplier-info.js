@@ -17,11 +17,11 @@ module.exports = {
         allowNull: false,
       },
       city: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       state: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       postalCode: {
@@ -39,14 +39,6 @@ module.exports = {
       duns: {
         type: Sequelize.INTEGER,
         allowNull: false,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     });
   },

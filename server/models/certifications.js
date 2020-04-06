@@ -6,14 +6,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       number: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
       expiration: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-  }, {});
+  }, {
+    freezeTableName: true,
+  });
   Certifications.associate = function(models) {
     Certifications.belongsTo(models.SupplierInfo, {
       foreignKey: 'supplierInfoId',

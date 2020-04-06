@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const ManagementTeam = sequelize.define('ManagementTeam', {
+  const ManagementTeams = sequelize.define('ManagementTeams', {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -14,12 +14,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     }
 
-  }, {});
-  ManagementTeam.associate = function(models) {
-    ManagementTeam.belongsTo(models.SupplierInfo, {
+  }, {
+    freezeTableName: true,
+  });
+  ManagementTeams.associate = function(models) {
+    ManagementTeams.belongsTo(models.SupplierInfo, {
       foreignKey: 'supplierInfoId',
       onDelete: 'CASCADE',
     });
   };
-  return ManagementTeam;
+  return ManagementTeams;
 };

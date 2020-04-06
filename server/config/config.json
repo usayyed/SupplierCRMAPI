@@ -5,7 +5,10 @@
     "database": "supplierlibrarydb",
     "host": "supplierlibrarydb.c5bi0jswrlu5.us-east-2.rds.amazonaws.com",
     "port": "5432",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "define": {
+        "timestamps": false
+    }
   },
   "test": {
     "username": "root",

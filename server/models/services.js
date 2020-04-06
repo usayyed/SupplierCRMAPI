@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  }, {});
+  }, {
+    freezeTableName: true,
+  });
   Services.associate = function(models) {
     Services.belongsTo(models.SupplierInfo, {
       foreignKey: 'supplierInfoId',

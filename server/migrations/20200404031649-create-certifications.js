@@ -12,17 +12,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       number: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
       expiration: {
-        type: Sequelize.DATE
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       supplierInfoId: {

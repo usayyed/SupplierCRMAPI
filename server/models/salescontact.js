@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
   }
-},{});
+},{
+  freezeTableName: true,
+});
   SalesContact.associate = function(models) {
     SalesContact.belongsTo(models.SupplierInfo, {
       foreignKey: 'supplierInfoId',

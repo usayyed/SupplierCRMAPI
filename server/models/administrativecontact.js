@@ -5,10 +5,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    location: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     phone: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -17,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     }
-  }, {});
+  }, {
+    freezeTableName: true,
+  });
   AdministrativeContact.associate = function(models) {
     AdministrativeContact.belongsTo(models.SupplierInfo, {
       foreignKey: 'supplierInfoId',

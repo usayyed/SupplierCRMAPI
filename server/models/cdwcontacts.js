@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const CdwContact = sequelize.define('CdwContact', {
+  const CdwContacts = sequelize.define('CdwContacts', {
     name:{
       type: DataTypes.STRING,
       allowNull: false,
@@ -10,16 +10,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     phone:{
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
     },
 
-  }, {});
-  CdwContact.associate = function(models) {
-    CdwContact.belongsTo(models.SupplierInfo, {
+  }, {
+    freezeTableName: true,
+  });
+  CdwContacts.associate = function(models) {
+    CdwContacts.belongsTo(models.SupplierInfo, {
       foreignKey: 'supplierInfoId',
       onDelete: 'CASCADE',
     });
   };
-  return CdwContact;
+  return CdwContacts;
 };

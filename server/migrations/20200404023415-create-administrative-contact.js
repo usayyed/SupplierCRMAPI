@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('AdministrativeContacts', {
+    return queryInterface.createTable('AdministrativeContact', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,10 +12,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      location: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       phone: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -23,14 +19,6 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       },
       supplierInfoId: {
         type: Sequelize.INTEGER,
@@ -44,6 +32,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('AdministrativeContacts');
+    return queryInterface.dropTable('AdministrativeContact');
   }
 };

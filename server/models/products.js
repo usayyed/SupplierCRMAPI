@@ -1,11 +1,13 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Products = sequelize.define('Products', {
-    name: {
+    value: {
       type: DataTypes.STRING,
       allowNull: false,
     }
-  }, {});
+  }, {
+    freezeTableName: true,
+  });
   Products.associate = function(models) {
     Products.belongsTo(models.SupplierInfo, {
       foreignKey: 'supplierInfoId',

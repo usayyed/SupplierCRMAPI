@@ -17,16 +17,8 @@ module.exports = {
         allowNull: false,
       },
       phone:{
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       },
       supplierInfoId: {
         type: Sequelize.INTEGER,

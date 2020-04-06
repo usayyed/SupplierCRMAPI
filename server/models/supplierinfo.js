@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     city: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     state: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     postalCode: {
@@ -34,36 +34,38 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
 
-  }, {});
+  }, {
+    freezeTableName: true,
+  });
   SupplierInfo.associate = function(models) {
     SupplierInfo.hasMany(models.Services, {
       foreignKey: 'supplierInfoId',
       as: 'services',
     })
 
-    SupplierInfo.hasMany(models.ManagementTeam, {
+    SupplierInfo.hasMany(models.ManagementTeams, {
       foreignKey: 'supplierInfoId',
       as: 'managementTeams',
     })
 
-    // SupplierInfo.hasOne(models.SupplierContact, {
-    //   foreignKey: 'supplierInfoId',
-    //   as: 'supplierContacts',
-    // })
-
-    // SupplierInfo.hasOne(models.AdminsitrativeContact, {
-    //   foreignKey: 'supplierInfoId',
-    //   as: 'supplierContacts',
-    // })
-
-    // SupplierInfo.hasOne(models.SalesContact, {
-    //   foreignKey: 'supplierInfoId',
-    //   as: 'supplierContacts',
-    // })
-
-    SupplierInfo.hasMany(models.CdwContact, {
+    SupplierInfo.hasMany(models.SupplierContact, {
       foreignKey: 'supplierInfoId',
-      as: 'supplierContacts',
+      as: 'supplierContact',
+    })
+
+    SupplierInfo.hasMany(models.AdministrativeContact, {
+      foreignKey: 'supplierInfoId',
+      as: 'administrativeContact',
+    })
+
+    SupplierInfo.hasMany(models.SalesContact, {
+      foreignKey: 'supplierInfoId',
+      as: 'salesContact',
+    })
+
+    SupplierInfo.hasMany(models.CdwContacts, {
+      foreignKey: 'supplierInfoId',
+      as: 'cdwContacts',
     })
 
     SupplierInfo.hasMany(models.Products, {
