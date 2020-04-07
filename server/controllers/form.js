@@ -15,7 +15,6 @@ const SupplierContact = require("../models").SupplierContact;
 
 module.exports = {
   create(req, res) {
-    console.log(req.body);
     return SupplierInfo.create(req.body, {
       include: [
         {
