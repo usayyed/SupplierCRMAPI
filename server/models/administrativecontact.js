@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "AdministrativeContact",
     {
       name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       },
       phone: {
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       email: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       }
     },

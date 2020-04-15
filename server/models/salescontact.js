@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const SalesContact = sequelize.define('SalesContact', {
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     phone: {
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
   }
 },{

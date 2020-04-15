@@ -9,15 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       title: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      location: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       supplierInfoId: {

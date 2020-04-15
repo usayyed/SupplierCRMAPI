@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const NaicsCodes = sequelize.define('NaicsCodes', {
     value: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     }
   }, {

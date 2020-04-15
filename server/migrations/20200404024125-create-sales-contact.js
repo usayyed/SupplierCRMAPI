@@ -9,14 +9,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       phone: {
         type: Sequelize.BIGINT,
         allowNull: false,
       },
       email: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       supplierInfoId: {

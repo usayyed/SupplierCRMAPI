@@ -2,11 +2,11 @@
 module.exports = (sequelize, DataTypes) => {
   const CdwContacts = sequelize.define('CdwContacts', {
     name:{
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     email:{
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     phone:{

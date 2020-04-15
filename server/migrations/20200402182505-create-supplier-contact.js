@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       phone: {
@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false,
       },
       email: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       supplierInfoId: {

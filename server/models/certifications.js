@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Certifications = sequelize.define('Certifications', {
       name: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       number: {

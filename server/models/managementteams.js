@@ -2,18 +2,13 @@
 module.exports = (sequelize, DataTypes) => {
   const ManagementTeams = sequelize.define('ManagementTeams', {
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
-    location: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    }
-
   }, {
     freezeTableName: true,
   });

@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Awards = sequelize.define('Awards', {
     value: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     }
   }, {
