@@ -9,18 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       username: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        unique: true,
       },
       password: {
         type: Sequelize.TEXT
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     });
   },

@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       number: {
-        type: Sequelize.BIGINT
+        type: Sequelize.TEXT
       },
       expiration: {
         type: Sequelize.DATE
