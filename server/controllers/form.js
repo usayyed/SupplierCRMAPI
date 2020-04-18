@@ -71,7 +71,9 @@ module.exports = {
         }
       ]
     })
-      .then(todo => res.status(201).send(todo))
-      .catch(error => res.status(400).send(error));
+      .then(resp => res.status(201).send(resp))
+      .catch(error => res.status(400).send({
+        "error": error.message,
+      }));
   }
 };
