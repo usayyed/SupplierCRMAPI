@@ -9,8 +9,10 @@ module.exports = {
       },
     })
       .then((users) => {
-        if (users === null || users.length === 0) {
-          throw new Error(`User ${req.body.username} not found`);
+        if (users === null || users.length === 0 || users[0].password !== req.body.password) {
+            return res.status(401).send({
+                error: "Invalid username or password",
+            });
         }
 
         return res.status(201).send({
