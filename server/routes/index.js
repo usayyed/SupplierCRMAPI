@@ -7,7 +7,8 @@ module.exports = (app) => {
   }));
 
   app.post('/api/submitForm', formController.create);
+  app.post('/api/admin/getSuppliers', formController.listAll);
 
   app.post('/api/login', authController.login);
-  app.post('/api/register', authController.create);
+  app.post('/api/admin/register', authController.create);
 };

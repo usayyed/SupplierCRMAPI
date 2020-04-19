@@ -1,3 +1,5 @@
+const sequelize = require("sequelize");
+const db = require("../models/index");
 const SupplierInfo = require("../models").SupplierInfo;
 const NaicsCodes = require("../models").NaicsCodes;
 const AdministrativeContact = require("../models").AdministrativeContact;
@@ -19,61 +21,114 @@ module.exports = {
       include: [
         {
           model: NaicsCodes,
-          as: "naicsCodes"
+          as: "naicsCodes",
         },
         {
           model: AdministrativeContact,
-          as: "administrativeContact"
+          as: "administrativeContact",
         },
         {
           model: SalesContact,
-          as: "salesContact"
+          as: "salesContact",
         },
         {
           model: SupplierContact,
-          as: "supplierContact"
+          as: "supplierContact",
         },
         {
           model: SicCodes,
-          as: "sicCodes"
+          as: "sicCodes",
         },
         {
           model: Services,
-          as: "services"
+          as: "services",
         },
         {
           model: CdwContacts,
-          as: "cdwContacts"
+          as: "cdwContacts",
         },
         {
           model: Products,
-          as: "products"
+          as: "products",
         },
         {
           model: Awards,
-          as: "awards"
+          as: "awards",
         },
         {
           model: Clients,
-          as: "clients"
+          as: "clients",
         },
         {
           model: Certifications,
-          as: "certifications"
+          as: "certifications",
         },
         {
           model: Partners,
-          as: "partners"
+          as: "partners",
         },
         {
           model: ManagementTeams,
-          as: "managementTeams"
-        }
-      ]
+          as: "managementTeams",
+        },
+      ],
     })
-      .then(resp => res.status(201).send(resp))
-      .catch(error => res.status(400).send({
-        "error": error.message,
-      }));
-  }
+      .then((resp) => res.status(201).send(resp))
+      .catch((error) =>
+        res.status(400).send({
+          error: error.message,
+        })
+      );
+  },
+
+  listAll(req, res) {
+    const searchField = req.body.searchField;
+    const searchTerm = `%${req.body.searchTerm.toLowerCase()}%`;
+    const limit = req.body.pageSize;
+    const offset = req.body.pageSize * (req.body.pageNumber - 1);
+
+    let whereField = "";
+    if (searchField === "services") {
+      whereField = `S."name"`;
+    } else if (searchField === "products") {
+      whereField = `P."value"`;
+    } else if (searchField === "certifications") {
+      whereField = `C."name"`;
+    } else {
+      whereField = `SI."${searchField}"`;
+    }
+
+    db.sequelize
+      .query(
+        `SELECT SI."name", SI."city", SI."state", 
+        array_to_string(array_agg(distinct C.name),', ') AS certifications,
+        array_to_string(array_agg(distinct P.value),', ') AS products,
+        array_to_string(array_agg(distinct S.name),', ') AS services 
+        FROM public."SupplierInfo" SI 
+        left outer join public."Certifications" C ON C."supplierInfoId" = si."id"
+        left outer join public."Products" P ON P."supplierInfoId" = si."id"
+        left outer join public."Services" S ON S."supplierInfoId" = si."id"
+        WHERE ${whereField} ILIKE :searchTerm
+        GROUP BY SI."name", SI."city", SI."state"
+        LIMIT :limit OFFSET :offset`,
+        {
+          replacements: {
+            searchTerm: searchTerm,
+            limit: limit,
+            offset: offset,
+          },
+          type: db.sequelize.QueryTypes.SELECT,
+        }
+      )
+      .then(function (suppliers) {
+        return res.status(201).send({
+          data: suppliers,
+        });
+      })
+      .catch((error) => {
+        return res.status(400).send({
+          error: error.message,
+        });
+      });
+  },
 };
