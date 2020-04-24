@@ -1,17 +1,16 @@
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
 let config = require('./server/config/config.json');
 
 config = config[process.env.NODE_ENV || 'development']
 
 // Set up the express app
 const app = express();
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+// Add Cors support
+app.use(cors());
 
 // Log requests to the console.
 app.use(logger('dev'));

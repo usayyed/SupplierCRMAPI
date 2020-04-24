@@ -15,63 +15,88 @@ const ManagementTeams = require("../models").ManagementTeams;
 const SalesContact = require("../models").SalesContact;
 const SupplierContact = require("../models").SupplierContact;
 
+const associations = [
+  {
+    model: NaicsCodes,
+    as: "naicsCodes",
+  },
+  {
+    model: AdministrativeContact,
+    as: "administrativeContact",
+  },
+  {
+    model: SalesContact,
+    as: "salesContact",
+  },
+  {
+    model: SupplierContact,
+    as: "supplierContact",
+  },
+  {
+    model: SicCodes,
+    as: "sicCodes",
+  },
+  {
+    model: Services,
+    as: "services",
+  },
+  {
+    model: CdwContacts,
+    as: "cdwContacts",
+  },
+  {
+    model: Products,
+    as: "products",
+  },
+  {
+    model: Awards,
+    as: "awards",
+  },
+  {
+    model: Clients,
+    as: "clients",
+  },
+  {
+    model: Certifications,
+    as: "certifications",
+  },
+  {
+    model: Partners,
+    as: "partners",
+  },
+  {
+    model: ManagementTeams,
+    as: "managementTeams",
+  },
+];
+
 module.exports = {
+  listOne(req, res) {
+    return SupplierInfo.findAll({
+      where: {
+        id: req.params.id,
+      },
+      include: associations,
+    })
+      .then((suppliers) => {
+        if (suppliers === null || suppliers.length === 0) {
+          throw new Error(`Supplier with ID ${req.params.id} not found`);
+        }
+
+        res.status(201).send({
+          data: suppliers[0],
+        });
+      })
+      .catch((error) =>
+        res.status(400).send({
+          error: error.message,
+        })
+      );
+  },
+
   create(req, res) {
     return SupplierInfo.create(req.body, {
-      include: [
-        {
-          model: NaicsCodes,
-          as: "naicsCodes",
-        },
-        {
-          model: AdministrativeContact,
-          as: "administrativeContact",
-        },
-        {
-          model: SalesContact,
-          as: "salesContact",
-        },
-        {
-          model: SupplierContact,
-          as: "supplierContact",
-        },
-        {
-          model: SicCodes,
-          as: "sicCodes",
-        },
-        {
-          model: Services,
-          as: "services",
-        },
-        {
-          model: CdwContacts,
-          as: "cdwContacts",
-        },
-        {
-          model: Products,
-          as: "products",
-        },
-        {
-          model: Awards,
-          as: "awards",
-        },
-        {
-          model: Clients,
-          as: "clients",
-        },
-        {
-          model: Certifications,
-          as: "certifications",
-        },
-        {
-          model: Partners,
-          as: "partners",
-        },
-        {
-          model: ManagementTeams,
-          as: "managementTeams",
-        },
-      ],
+      include: associations,
     })
       .then((resp) => res.status(201).send(resp))
       .catch((error) =>
@@ -100,7 +125,7 @@ module.exports = {
 
     db.sequelize
       .query(
-        `SELECT SI."name", SI."city", SI."state", 
+        `SELECT SI."id", SI."name", SI."city", SI."state", 
         array_to_string(array_agg(distinct C.name),', ') AS certifications,
         array_to_string(array_agg(distinct P.value),', ') AS products,
         array_to_string(array_agg(distinct S.name),', ') AS services 
@@ -109,7 +134,7 @@ module.exports = {
         left outer join public."Products" P ON P."supplierInfoId" = si."id"
         left outer join public."Services" S ON S."supplierInfoId" = si."id"
         WHERE ${whereField} ILIKE :searchTerm
-        GROUP BY SI."name", SI."city", SI."state"
+        GROUP BY SI."id", SI."name", SI."city", SI."state"
         LIMIT :limit OFFSET :offset`,
         {
           replacements: {
@@ -123,6 +148,7 @@ module.exports = {
       .then(function (suppliers) {
         return res.status(201).send({
           data: suppliers,
+          count: suppliers.length,
         });
       })
       .catch((error) => {
