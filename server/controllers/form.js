@@ -123,19 +123,24 @@ module.exports = {
       whereField = `SI."${searchField}"`;
     }
 
-    db.sequelize
-      .query(
-        `SELECT SI."id", SI."name", SI."city", SI."state", 
-        array_to_string(array_agg(distinct C.name),', ') AS certifications,
-        array_to_string(array_agg(distinct P.value),', ') AS products,
-        array_to_string(array_agg(distinct S.name),', ') AS services 
-        FROM public."SupplierInfo" SI 
-        left outer join public."Certifications" C ON C."supplierInfoId" = si."id"
-        left outer join public."Products" P ON P."supplierInfoId" = si."id"
-        left outer join public."Services" S ON S."supplierInfoId" = si."id"
-        WHERE ${whereField} ILIKE :searchTerm
-        GROUP BY SI."id", SI."name", SI."city", SI."state"
-        LIMIT :limit OFFSET :offset`,
+    const queryNoLimit = `SELECT SI."id", SI."name", SI."city", SI."state", 
+    array_to_string(array_agg(distinct C.name),', ') AS certifications,
+    array_to_string(array_agg(distinct P.value),', ') AS products,
+    array_to_string(array_agg(distinct S.name),', ') AS services 
+    FROM public."SupplierInfo" SI 
+    left outer join public."Certifications" C ON C."supplierInfoId" = si."id"
+    left outer join public."Products" P ON P."supplierInfoId" = si."id"
+    left outer join public."Services" S ON S."supplierInfoId" = si."id"
+    WHERE ${whereField} ILIKE :searchTerm
+    GROUP BY SI."id", SI."name", SI."city", SI."state"`
+
+    const queryWithLimit =  `${queryNoLimit}
+    LIMIT :limit OFFSET :offset`
+
+    const queryCount = `SELECT COUNT(*) AS Count FROM (${queryNoLimit}) AS SUB`
+
+    const queryPromise = db.sequelize
+      .query(queryWithLimit,
         {
           replacements: {
             searchTerm: searchTerm,
@@ -145,10 +150,22 @@ module.exports = {
           type: db.sequelize.QueryTypes.SELECT,
         }
       )
-      .then(function (suppliers) {
+
+    const queryCountPromise = db.sequelize
+    .query(queryCount,
+      {
+        replacements: {
+          searchTerm: searchTerm,
+        },
+        type: db.sequelize.QueryTypes.SELECT,
+      }
+    )
+
+    Promise.all([queryPromise, queryCountPromise])
+      .then(function (responses) {
         return res.status(201).send({
-          data: suppliers,
-          count: suppliers.length,
+          data: responses[0],
+          count: responses[1][0].count,
         });
       })
       .catch((error) => {
