@@ -70,22 +70,52 @@ const associations = [
   },
 ];
 
+function getModelPromise(model, id) {
+  return model.findAll({
+    where: {
+      supplierInfoId: id,
+    },
+  });
+}
+
 module.exports = {
   listOne(req, res) {
     return SupplierInfo.findAll({
       where: {
         id: req.params.id,
-      },
-      include: associations,
+      }
     })
       .then((suppliers) => {
         if (suppliers === null || suppliers.length === 0) {
           throw new Error(`Supplier with ID ${req.params.id} not found`);
         }
 
-        res.status(201).send({
-          data: suppliers[0],
-        });
+        Promise.all(associations.map((a) => getModelPromise(a.model, suppliers[0].id)))
+        .then((responses) => {
+          const data = {}
+
+          associations.forEach((a, i) => {
+            data[a.as] = responses[i]
+          })
+
+          data.id = suppliers[0].id
+          data.name = suppliers[0].name
+          data.address = suppliers[0].address
+          data.state = suppliers[0].state
+          data.city = suppliers[0].city
+          data.image = suppliers[0].image
+          data.postalCode = suppliers[0].postalCode
+          data.website = suppliers[0].website
+          data.description = suppliers[0].description
+          data.duns = suppliers[0].duns
+
+          res.status(201).send({
+              data,
+          });
+        })
+        .catch((error) => {
+          throw error;
+        })
       })
       .catch((error) =>
         res.status(400).send({
@@ -132,34 +162,28 @@ module.exports = {
     left outer join public."Products" P ON P."supplierInfoId" = si."id"
     left outer join public."Services" S ON S."supplierInfoId" = si."id"
     WHERE ${whereField} ILIKE :searchTerm
-    GROUP BY SI."id", SI."name", SI."city", SI."state"`
+    GROUP BY SI."id", SI."name", SI."city", SI."state"`;
 
-    const queryWithLimit =  `${queryNoLimit}
-    LIMIT :limit OFFSET :offset`
+    const queryWithLimit = `${queryNoLimit}
+    LIMIT :limit OFFSET :offset`;
 
-    const queryCount = `SELECT COUNT(*) AS Count FROM (${queryNoLimit}) AS SUB`
+    const queryCount = `SELECT COUNT(*) AS Count FROM (${queryNoLimit}) AS SUB`;
 
-    const queryPromise = db.sequelize
-      .query(queryWithLimit,
-        {
-          replacements: {
-            searchTerm: searchTerm,
-            limit: limit,
-            offset: offset,
-          },
-          type: db.sequelize.QueryTypes.SELECT,
-        }
-      )
+    const queryPromise = db.sequelize.query(queryWithLimit, {
+      replacements: {
+        searchTerm: searchTerm,
+        limit: limit,
+        offset: offset,
+      },
+      type: db.sequelize.QueryTypes.SELECT,
+    });
 
-    const queryCountPromise = db.sequelize
-    .query(queryCount,
-      {
-        replacements: {
-          searchTerm: searchTerm,
-        },
-        type: db.sequelize.QueryTypes.SELECT,
-      }
-    )
+    const queryCountPromise = db.sequelize.query(queryCount, {
+      replacements: {
+        searchTerm: searchTerm,
+      },
+      type: db.sequelize.QueryTypes.SELECT,
+    });
 
     Promise.all([queryPromise, queryCountPromise])
       .then(function (responses) {
