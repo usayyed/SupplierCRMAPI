@@ -153,6 +153,8 @@ module.exports = {
       whereField = `SI."${searchField}"`;
     }
 
+    const orderBy = `ORDER BY SI."${req.body.orderBy[0]}" ${req.body.orderBy[1]}`
+
     const queryNoLimit = `SELECT SI."id", SI."name", SI."city", SI."state", 
     array_to_string(array_agg(distinct C.name),', ') AS certifications,
     array_to_string(array_agg(distinct P.value),', ') AS products,
@@ -162,7 +164,8 @@ module.exports = {
     left outer join public."Products" P ON P."supplierInfoId" = si."id"
     left outer join public."Services" S ON S."supplierInfoId" = si."id"
     WHERE ${whereField} ILIKE :searchTerm
-    GROUP BY SI."id", SI."name", SI."city", SI."state"`;
+    GROUP BY SI."id", SI."name", SI."city", SI."state"
+    ${orderBy}`;
 
     const queryWithLimit = `${queryNoLimit}
     LIMIT :limit OFFSET :offset`;

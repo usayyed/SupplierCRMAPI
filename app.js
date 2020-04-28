@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const winston = require('./server/config/winston');
 
 let config = require('./server/config/config.json');
 
@@ -13,7 +14,7 @@ const app = express();
 app.use(cors());
 
 // Log requests to the console.
-app.use(logger('dev'));
+app.use(logger('combined', { stream: winston.stream }));
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
