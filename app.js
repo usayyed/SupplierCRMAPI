@@ -14,11 +14,16 @@ const app = express();
 app.use(cors());
 
 app.use(function (req, res, next) {
-  response.setHeader(
+  res.setHeader(
     "Access-Control-Allow-Headers",
-    "Authorization,Content-Type, Content-Range, Content-Disposition, Content-Description,Origin, X-Requested-With, sessionId"
+    "Authorization, Content-Type, Content-Range, Content-Disposition, Content-Description,Origin, X-Requested-With, sessionId"
   );
-  response.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Authorization, Content-Type, Content-Range, Content-Disposition, Content-Description,Origin, X-Requested-With, sessionId"
+  );
+  res.header("Access-Control-Allow-Origin", "*");
   next();
 });
 
