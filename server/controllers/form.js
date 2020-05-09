@@ -14,6 +14,8 @@ const Partners = require("../models").Partners;
 const ManagementTeams = require("../models").ManagementTeams;
 const SalesContact = require("../models").SalesContact;
 const SupplierContact = require("../models").SupplierContact;
+const State = require("../models").State;
+const City = require("../models").City;
 
 const associations = [
   {
@@ -79,6 +81,47 @@ function getModelPromise(model, id) {
 }
 
 module.exports = {
+  listAllStates(req, res) {
+    return State.findAll({})
+    .then((states) => {
+      res.status(201).send({
+        data: {
+          states: states.map((s) => s.name)
+        },
+      })
+    })
+    .catch((error) =>
+        res.status(400).send({
+          error: error.message,
+        })
+      );
+  },
+
+  listAllCities(req, res) {
+    return State.findAll({
+      where: {
+        id: Number(req.params.id, 10)
+      },
+      include: [
+          {model: City, as: 'cities'}
+      ]
+  })
+  .then((states) => {
+    const cities = states.length > 0 ? states[0].cities.map(c => c.name) : [];
+
+    res.status(201).send({
+      data: {
+        cities: cities
+      },
+    })
+  })
+    .catch((error) =>
+        res.status(400).send({
+          error: error.message,
+        })
+      );
+  },
+
   listOne(req, res) {
     return SupplierInfo.findAll({
       where: {
