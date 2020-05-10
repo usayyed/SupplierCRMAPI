@@ -83,14 +83,14 @@ function getModelPromise(model, id) {
 module.exports = {
   listAllStates(req, res) {
     return State.findAll({})
-    .then((states) => {
-      res.status(201).send({
-        data: {
-          states: states.map((s) => s.name)
-        },
+      .then((states) => {
+        res.status(201).send({
+          data: {
+            states: states,
+          },
+        });
       })
-    })
-    .catch((error) =>
+      .catch((error) =>
         res.status(400).send({
           error: error.message,
         })
@@ -100,22 +100,21 @@ module.exports = {
   listAllCities(req, res) {
     return State.findAll({
       where: {
-        id: Number(req.params.id, 10)
+        id: Number(req.params.id, 10),
       },
-      include: [
-          {model: City, as: 'cities'}
-      ]
-  })
-  .then((states) => {
-    const cities = states.length > 0 ? states[0].cities.map(c => c.name) : [];
-
-    res.status(201).send({
-      data: {
-        cities: cities
-      },
+      include: [{ model: City, as: "cities" }],
     })
-  })
-    .catch((error) =>
+      .then((states) => {
+        const cities =
+          states.length > 0 ? states[0].cities.map((c) => c.name) : [];
+
+        res.status(201).send({
+          data: {
+            cities: cities,
+          },
+        });
+      })
+      .catch((error) =>
         res.status(400).send({
           error: error.message,
         })
@@ -126,39 +125,41 @@ module.exports = {
     return SupplierInfo.findAll({
       where: {
         id: req.params.id,
-      }
+      },
     })
       .then((suppliers) => {
         if (suppliers === null || suppliers.length === 0) {
           throw new Error(`Supplier with ID ${req.params.id} not found`);
         }
 
-        Promise.all(associations.map((a) => getModelPromise(a.model, suppliers[0].id)))
-        .then((responses) => {
-          const data = {}
+        Promise.all(
+          associations.map((a) => getModelPromise(a.model, suppliers[0].id))
+        )
+          .then((responses) => {
+            const data = {};
 
-          associations.forEach((a, i) => {
-            data[a.as] = responses[i]
-          })
+            associations.forEach((a, i) => {
+              data[a.as] = responses[i];
+            });
 
-          data.id = suppliers[0].id
-          data.name = suppliers[0].name
-          data.address = suppliers[0].address
-          data.state = suppliers[0].state
-          data.city = suppliers[0].city
-          data.image = suppliers[0].image
-          data.postalCode = suppliers[0].postalCode
-          data.website = suppliers[0].website
-          data.description = suppliers[0].description
-          data.duns = suppliers[0].duns
+            data.id = suppliers[0].id;
+            data.name = suppliers[0].name;
+            data.address = suppliers[0].address;
+            data.state = suppliers[0].state;
+            data.city = suppliers[0].city;
+            data.image = suppliers[0].image;
+            data.postalCode = suppliers[0].postalCode;
+            data.website = suppliers[0].website;
+            data.description = suppliers[0].description;
+            data.duns = suppliers[0].duns;
 
-          res.status(201).send({
+            res.status(201).send({
               data,
+            });
+          })
+          .catch((error) => {
+            throw error;
           });
-        })
-        .catch((error) => {
-          throw error;
-        })
       })
       .catch((error) =>
         res.status(400).send({
@@ -185,28 +186,36 @@ module.exports = {
     const limit = req.body.pageSize;
     const offset = req.body.pageSize * (req.body.pageNumber - 1);
 
-    let whereField = "";
+    let where = "";
     if (searchField === "services") {
-      whereField = `S."name"`;
+      where = `WHERE S."name" ILIKE `;
     } else if (searchField === "products") {
-      whereField = `P."value"`;
+      where = `WHERE P."value" ILIKE `;
     } else if (searchField === "certifications") {
-      whereField = `C."name"`;
+      where = `WHERE C."name" ILIKE `;
+    } else if (searchField === "naicscodes") {
+      where = `WHERE CAST(N."value" AS TEXT) ILIKE `;
+    } else if (searchField === "siccodes") {
+      where = `WHERE CAST(SIC."value" AS TEXT) ILIKE `;
     } else {
-      whereField = `SI."${searchField}"`;
+      where = `WHERE SI."${searchField}" ILIKE `;
     }
 
-    const orderBy = `ORDER BY SI."${req.body.orderBy[0]}" ${req.body.orderBy[1]}`
+    const orderBy = `ORDER BY SI."${req.body.orderBy[0]}" ${req.body.orderBy[1]}`;
 
     const queryNoLimit = `SELECT SI."id", SI."name", SI."city", SI."state", 
     array_to_string(array_agg(distinct C.name),', ') AS certifications,
     array_to_string(array_agg(distinct P.value),', ') AS products,
-    array_to_string(array_agg(distinct S.name),', ') AS services 
+    array_to_string(array_agg(distinct S.name),', ') AS services,
+	array_to_string(array_agg(distinct N.value),', ') AS naicscodes,
+	array_to_string(array_agg(distinct SIC.value),', ') AS siccodes 
     FROM public."SupplierInfo" SI 
     left outer join public."Certifications" C ON C."supplierInfoId" = si."id"
     left outer join public."Products" P ON P."supplierInfoId" = si."id"
     left outer join public."Services" S ON S."supplierInfoId" = si."id"
-    WHERE ${whereField} ILIKE :searchTerm
+	left outer join public."NaicsCodes" N ON N."supplierInfoId" = si."id"
+	left outer join public."SicCodes" SIC ON SIC."supplierInfoId" = si."id"
+    ${where} :searchTerm
     GROUP BY SI."id", SI."name", SI."city", SI."state"
     ${orderBy}`;
 
