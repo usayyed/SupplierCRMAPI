@@ -16,6 +16,7 @@ const SalesContact = require("../models").SalesContact;
 const SupplierContact = require("../models").SupplierContact;
 const State = require("../models").State;
 const City = require("../models").City;
+const Certificate = require("../models").Certificate;
 
 const associations = [
   {
@@ -87,6 +88,22 @@ module.exports = {
         res.status(201).send({
           data: {
             states: states,
+          },
+        });
+      })
+      .catch((error) =>
+        res.status(400).send({
+          error: error.message,
+        })
+      );
+  },
+
+  listAllCertificates(req, res) {
+    return Certificate.findAll({})
+      .then((certifications) => {
+        res.status(201).send({
+          data: {
+            certifications: certifications.map(c => c.name),
           },
         });
       })

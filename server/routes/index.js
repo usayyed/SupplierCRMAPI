@@ -11,6 +11,7 @@ module.exports = (app) => {
   app.get('/api/admin/getSupplier/:id', formController.listOne);
   app.get('/api/states', formController.listAllStates);
   app.get('/api/cities/:id', formController.listAllCities);
+  app.get('/api/certificates', formController.listAllCertificates);
 
   app.post('/api/login', authController.login);
   app.post('/api/admin/register', authController.create);
